@@ -5,7 +5,7 @@ import {
 const colors = {
   custom: {
     brand: '#00cc7e',
-    primary: '#eeeeee',
+    primary: '#f5f5f5',
     secondary: '#666',
     dark: '#141414',
     medium: '#333333',
@@ -19,29 +19,8 @@ const theme = extendTheme({
     global: {
       body: {
         fontFamily: 'Inter, sans-serif',
-        backgroundColor: '#141414',
-        color: '#eeeeee',
-      },
-    },
-  },
-  components: {
-    Button: {
-      variants: {
-        primary: {
-          bg: 'custom.brand',
-          color: 'custom.primary',
-        },
-      },
-    },
-    Input: {
-      variants: {
-        primary: {
-          field: {
-            bg: 'custom.medium',
-            border: 'none',
-            color: 'custom.primary',
-          },
-        },
+        color: '#f5f5f5',
+        backgroundColor: '#1f1f1f',
       },
     },
   },

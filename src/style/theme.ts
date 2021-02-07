@@ -21,6 +21,7 @@ const theme = extendTheme({
         fontFamily: 'Inter, sans-serif',
         color: '#f5f5f5',
         backgroundColor: '#1f1f1f',
+        minHeight: '100vh',
       },
     },
   },

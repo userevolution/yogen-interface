@@ -42,7 +42,7 @@ function Home() {
     <>
       <Center>
         <Box
-          backgroundColor="#111111"
+          backgroundColor="#141414"
           padding="30px"
           borderRadius="20px"
         >

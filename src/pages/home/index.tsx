@@ -16,6 +16,7 @@ import {
   Image,
   HStack,
   VStack,
+  Tag,
 } from '@chakra-ui/react';
 
 function formatCountdown(duration: number) {
@@ -194,10 +195,14 @@ function Home() {
                   </Td>
                   <Td
                     borderColor="#666666"
-                    color="#f24333"
-                    fontWeight="600"
                   >
-                    - 3.63%
+                    <Tag
+                      color="#f24333"
+                      fontWeight="600"
+                      backgroundColor="#3A0903"
+                    >
+                      -3.63%
+                    </Tag>
                   </Td>
                   <Td
                     borderColor="#666666"

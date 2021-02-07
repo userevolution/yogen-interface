@@ -164,6 +164,60 @@ function Home() {
               <Flex
                 width="100%"
                 paddingX="14px"
+                marginBottom="8px"
+                color="#999"
+              >
+                <Box width={1 / 2}>
+                  <Text>
+                    Delivery date
+                  </Text>
+                </Box>
+                <Box
+                  width={1 / 2}
+                  textAlign="right"
+                >
+                  <Text>
+                    Expires on
+                  </Text>
+                </Box>
+              </Flex>
+              <Flex
+                width="100%"
+              >
+                <Box width={1 / 2}>
+                  <input
+                    width="100%"
+                    type="datetime-local"
+                    id="meeting-time"
+                    name="meeting-time"
+                    value="2018-06-12T19:30"
+                    min="2018-06-07T00:00"
+                    max="2018-06-14T00:00"
+                    style={{
+                      borderRadius: '20px',
+                      padding: '10px',
+                      backgroundColor: '#333',
+                      color: '#f5f5f5',
+                    }}
+                  />
+                </Box>
+                <Box width={1 / 2}>
+                  <input
+                    width="100%"
+                    type="datetime-local"
+                    id="meeting-time"
+                    name="meeting-time"
+                    value="2018-06-12T19:30"
+                    min="2018-06-07T00:00"
+                    max="2018-06-14T00:00"
+                  />
+                </Box>
+              </Flex>
+            </Box>
+            <Box width="100%">
+              <Flex
+                width="100%"
+                paddingX="14px"
               >
                 <Box width={1 / 2}>
                   <Text

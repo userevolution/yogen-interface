@@ -17,6 +17,7 @@ import Home from '../../pages/home';
 import Add from '../../pages/add';
 import Create from '../../pages/create';
 import Swap from '../../pages/swap';
+import Test from '../../pages/test';
 
 import theme from '../../style/theme';
 import getLibrary from '../../store/library';
@@ -32,6 +33,7 @@ function App() {
             <Route path="/add" exact component={Add} />
             <Route path="/create" exact component={Create} />
             <Route path="/swap" exact component={Swap} />
+            <Route path="/test" exact component={Test} />
             <Route path="/" component={Home} />
           </Switch>
         </BrowserRouter>

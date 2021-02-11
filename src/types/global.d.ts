@@ -1,9 +1,12 @@
-interface Asset {
-  id: string;
-  url: string;
-  image: string;
-  name: string;
-  tokenName: string;
-  tokenAddress: string;
-  type: 'ERC721' | 'ERC1155';
+interface Proposal {
+  _id: string,
+  initiator: string;
+  tokenIn: string;
+  amountIn: string;
+  tokenOut: string;
+  amountOut: string;
+  deliveryDate: string;
+  expiryDate: string;
+  sig: string;
+  networkId: string;
 }

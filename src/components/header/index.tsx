@@ -58,7 +58,7 @@ function Header() {
             textDecoration: 'none',
           }}
         >
-          Create Future Swap
+          Create Proposal
         </Link>
         <Link
           as={RouterLink}
@@ -74,7 +74,23 @@ function Header() {
             textDecoration: 'none',
           }}
         >
-          Browse Future Swap Proposals
+          Browse Proposals
+        </Link>
+        <Link
+          as={RouterLink}
+          to="/proposals"
+          fontWeight="500"
+          color="#cccccc"
+          _activeLink={{
+            color: '#f5f5f5',
+            fontWeight: 600,
+          }}
+          _hover={{
+            color: '#f5f5f5',
+            textDecoration: 'none',
+          }}
+        >
+          Trade Futures
         </Link>
       </HStack>
       <Spacer />
@@ -95,7 +111,7 @@ function Header() {
                 textDecoration: 'none',
               }}
             >
-              My Future Swap Proposals
+              My Proposals
             </Link>
             <Link
               as={RouterLink}
@@ -111,7 +127,7 @@ function Header() {
                 textDecoration: 'none',
               }}
             >
-              My Future Swaps
+              My Futures
             </Link>
           </>
         )}

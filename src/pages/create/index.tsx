@@ -28,6 +28,9 @@ import TokenModal from '../../components/tokenModal';
 import {
   signProposal,
 } from '../../utils/utils';
+import {
+  fetchPriceOn1Inch,
+} from '../../utils/priceFetcher';
 
 function Create() {
   const {
@@ -48,6 +51,39 @@ function Create() {
 
   const [isTokenInModalOpen, toggleTokenInModal] = useState<boolean>(false);
   const [isTokenOutModalOpen, toggleTokenOutModal] = useState<boolean>(false);
+
+  const [askedPrice, setAskedPrice] = useState<string>('-');
+
+
+  useEffect(() => {
+    if (tokenIn && tokenOut && amountIn !== '' && amountOut !== '') {
+      const price = utils.parseUnits(amountOut, tokenOut?.decimals).div(
+        utils.parseUnits(amountIn, tokenIn?.decimals),
+      );
+
+      setAskedPrice(price.toString());
+    }
+  }, [tokenIn, tokenOut, amountIn, amountOut]);
+
+  useEffect(() => {
+    async function fetchPrice() {
+      try {
+        const price = await fetchPriceOn1Inch(
+          tokenIn?.address as string,
+          utils.parseUnits(amountIn, tokenIn?.decimals).toString(),
+          tokenOut?.address as string,
+        );
+
+        console.log(price);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    if (tokenIn !== undefined && tokenOut !== undefined && amountIn !== '') {
+      fetchPrice();
+    }
+  }, [tokenIn, tokenOut, amountIn]);
 
   return (
     <>
@@ -144,7 +180,7 @@ function Create() {
                     {tokenIn ? (
                       <HStack>
                         <Image
-                          src={tokenIn.icon}
+                          src={tokenIn.logoURI}
                           borderRadius="full"
                           boxSize="24px"
                         />
@@ -236,7 +272,7 @@ function Create() {
                     {tokenOut ? (
                       <HStack>
                         <Image
-                          src={tokenOut.icon}
+                          src={tokenOut.logoURI}
                           borderRadius="full"
                           boxSize="24px"
                         />
@@ -339,10 +375,40 @@ function Create() {
               >
                 <Box width={1 / 2}>
                   <Text
+                    fontSize="16px"
+                    fontWeight="600"
+                  >
+                    Asked price
+                  </Text>
+                </Box>
+                <Box
+                  width={1 / 2}
+                  textAlign="right"
+                >
+                  <Text
+                    fontSize="14px"
+                    fontWeight="500"
+                  >
+                    {tokenIn && tokenOut ? (
+                      <>
+                        {`${askedPrice} ${tokenOut?.symbol} per ${tokenIn?.symbol}`}
+                      </>
+                    ) : (
+                      <>-</>
+                    )}
+                  </Text>
+                </Box>
+              </Flex>
+              <Flex
+                width="100%"
+                paddingX="14px"
+              >
+                <Box width={1 / 2}>
+                  <Text
                     fontSize="14px"
                     color="#999"
                   >
-                    Current price
+                    Current price on Uniswap
                   </Text>
                 </Box>
                 <Box
@@ -359,38 +425,14 @@ function Create() {
               </Flex>
               <Flex
                 width="100%"
-                paddingX="12px"
-              >
-                <Box width={1 / 2}>
-                  <Text
-                    fontSize="14px"
-                    color="#999"
-                  >
-                    Asked price
-                  </Text>
-                </Box>
-                <Box
-                  width={1 / 2}
-                  textAlign="right"
-                >
-                  <Text
-                    fontSize="14px"
-                    fontWeight="500"
-                  >
-                    0.012 UNI per ETH
-                  </Text>
-                </Box>
-              </Flex>
-              <Flex
-                width="100%"
-                paddingX="12px"
+                paddingX="14px"
               >
                 <Box width={1 / 2}>
                   <Text
                     fontSize="16px"
                     fontWeight="600"
                   >
-                    Difference
+                    Expected changed
                   </Text>
                 </Box>
                 <Box
@@ -415,7 +457,7 @@ function Create() {
                 fontSize="20px"
                 paddingY="28px"
                 disabled={
-                  tokenIn === undefined || tokenOut === undefined || amountIn === '' || amountOut === '' || deliveryDate === '' || expiryDate === ''
+                  !account || tokenIn === undefined || tokenOut === undefined || amountIn === '' || amountOut === '' || deliveryDate === '' || expiryDate === ''
                 }
                 onClick={async () => {
                   try {
@@ -434,17 +476,17 @@ function Create() {
                   } catch (e) {
                     console.error(e);
                   }
-                  console.log(tokenIn?.address);
-                  console.log(tokenOut?.address);
-
-                  console.log(amountIn);
-                  console.log(amountOut);
-
-                  console.log();
-                  console.log(new Date(expiryDate).getTime() / 1000);
                 }}
               >
-                Create proposal
+                {account ? (
+                  <>
+                    Create Proposal
+                  </>
+                ) : (
+                  <>
+                    Connect a wallet
+                  </>
+                )}
               </Button>
             </Box>
           </VStack>

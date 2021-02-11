@@ -5,8 +5,10 @@ import React, {
 import {
   Client,
   PrivateKey,
-  UserAuth,
 } from '@textile/hub';
+import {
+  Database,
+} from '@textile/threaddb';
 
 function Test() {
   const [user, setUser] = useState();
@@ -14,8 +16,15 @@ function Test() {
   useEffect(() => {
     async function setup() {
       try {
-        const user = await PrivateKey.fromRandom();
-        // const client = await Client.withUserAuth(user);
+        const client = await Client.withKeyInfo(
+          {
+            key: 'bvxj4coxrrrjdxuodngbbk5zz4m',
+          },
+        );
+
+        await client.getToken(PrivateKey.fromRandom());
+
+        client.create()
       } catch (e) {
         console.error(e);
       }

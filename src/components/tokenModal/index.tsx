@@ -7,10 +7,8 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  ModalFooter,
   ModalContent,
   Input,
-  Button,
   Text,
   Divider,
   VStack,
@@ -23,16 +21,7 @@ interface TokenModalProps {
   isOpen: boolean;
   onClose: Function;
   title: string;
-  address: string;
-  onAddressChange: Function;
-  symbol: string;
-}
-
-interface Token {
-  address: string;
-  name: string;
-  symbol: string;
-  icon: string;
+  onTokenSelected: Function;
 }
 
 const tokens: Token[] = [
@@ -67,10 +56,10 @@ function TokenModal(props: TokenModalProps) {
     isOpen,
     onClose,
     title,
-    address,
-    onAddressChange,
-    symbol,
+    onTokenSelected,
   } = props;
+
+  const [searchAddress, setSearchAddress] = useState<string>('');
 
   return (
     <Modal
@@ -92,8 +81,8 @@ function TokenModal(props: TokenModalProps) {
           <Input
             type="text"
             placeholder="Search name or paste address"
-            value={address}
-            onChange={(e) => onAddressChange(e.target.value)}
+            value={searchAddress}
+            onChange={(e) => setSearchAddress(e.target.value)}
             autoFocus
             bg="#333333"
             border="none"
@@ -104,9 +93,10 @@ function TokenModal(props: TokenModalProps) {
           <VStack spacing="20px" marginBottom="10px">
             {tokens.map((token) => (
               <HStack
+                key={(Math.random().toString())}
                 width="100%"
                 justifyContent="space-between"
-                onClick={() => alert(token.name)}
+                onClick={() => onTokenSelected(token)}
                 _hover={{
                   backgroundColor: '#333',
                 }}

@@ -8,10 +8,11 @@ import {
   Box,
   Heading,
   Input,
-  HStack,
   VStack,
   Button,
   Flex,
+  Image,
+  HStack,
 } from '@chakra-ui/react';
 import {
   ArrowDownIcon,
@@ -21,11 +22,11 @@ import {
 import TokenModal from '../../components/tokenModal';
 
 function Create() {
-  const [tokenIn, setTokenIn] = useState<string>('');
+  const [tokenIn, setTokenIn] = useState<Token>();
   const [amountIn, setAmountIn] = useState<string>('');
   const [balanceIn, setBalanceIn] = useState<string>('-');
 
-  const [tokenOut, setTokenOut] = useState<string>('');
+  const [tokenOut, setTokenOut] = useState<Token>();
   const [amountOut, setAmountOut] = useState<string>('');
   const [balanceOut, setBalanceOut] = useState<string>('-');
 
@@ -41,17 +42,19 @@ function Create() {
         isOpen={isTokenInModalOpen}
         onClose={() => toggleTokenInModal(false)}
         title="Select a token"
-        symbol=""
-        address={tokenIn}
-        onAddressChange={(token: string) => setTokenIn(token)}
+        onTokenSelected={(token: Token) => {
+          toggleTokenInModal(false);
+          setTokenIn(token);
+        }}
       />
       <TokenModal
         isOpen={isTokenOutModalOpen}
         onClose={() => toggleTokenOutModal(false)}
         title="Select a token"
-        symbol=""
-        address={tokenOut}
-        onAddressChange={(token: string) => setTokenOut(token)}
+        onTokenSelected={(token: Token) => {
+          toggleTokenOutModal(false);
+          setTokenOut(token);
+        }}
       />
       <Center>
         <Box
@@ -87,7 +90,7 @@ function Create() {
                 >
                   <Text>
                     Balance:
-                    {}
+                    {' '}
                     {balanceIn}
                   </Text>
                 </Box>
@@ -113,6 +116,8 @@ function Create() {
                     placeholder="0.0"
                     width="100%"
                     border="none"
+                    value={amountIn}
+                    onChange={(e) => setAmountIn(e.target.value)}
                   />
                 </Box>
                 <Box>
@@ -123,16 +128,35 @@ function Create() {
                     alignItems="center"
                     onClick={() => toggleTokenInModal(true)}
                   >
-                    <span>
-                      Select token
-                    </span>
-                    <span
-                      style={{
-                        marginInlineStart: '0.5rem',
-                      }}
-                    >
-                      <ChevronDownIcon />
-                    </span>
+                    {tokenIn ? (
+                      <HStack>
+                        <Image
+                          src={tokenIn.icon}
+                          borderRadius="full"
+                          boxSize="24px"
+                        />
+                        <Text
+                          color="custom.primary"
+                          fontSize="16px"
+                          fontWeight={500}
+                        >
+                          {tokenIn.symbol}
+                        </Text>
+                      </HStack>
+                    ) : (
+                      <>
+                        <span>
+                          Select token
+                        </span>
+                        <span
+                          style={{
+                            marginInlineStart: '0.5rem',
+                          }}
+                        >
+                          <ChevronDownIcon />
+                        </span>
+                      </>
+                    )}
                   </Button>
                 </Box>
               </Flex>
@@ -149,7 +173,7 @@ function Create() {
               >
                 <Box width={1 / 2}>
                   <Text>
-                    From
+                    To
                   </Text>
                 </Box>
                 <Box
@@ -158,8 +182,8 @@ function Create() {
                 >
                   <Text>
                     Balance:
-                    {}
-                    {balanceIn}
+                    {' '}
+                    {balanceOut}
                   </Text>
                 </Box>
               </Flex>
@@ -184,6 +208,8 @@ function Create() {
                     placeholder="0.0"
                     width="100%"
                     border="none"
+                    value={amountOut}
+                    onChange={(e) => setAmountOut(e.target.value)}
                   />
                 </Box>
                 <Box>
@@ -191,8 +217,38 @@ function Create() {
                     width="100%"
                     borderRadius="full"
                     backgroundColor="custom.brand"
+                    alignItems="center"
+                    onClick={() => toggleTokenOutModal(true)}
                   >
-                    Select token
+                    {tokenOut ? (
+                      <HStack>
+                        <Image
+                          src={tokenOut.icon}
+                          borderRadius="full"
+                          boxSize="24px"
+                        />
+                        <Text
+                          color="custom.primary"
+                          fontSize="16px"
+                          fontWeight={500}
+                        >
+                          {tokenOut.symbol}
+                        </Text>
+                      </HStack>
+                    ) : (
+                      <>
+                        <span>
+                          Select token
+                        </span>
+                        <span
+                          style={{
+                            marginInlineStart: '0.5rem',
+                          }}
+                        >
+                          <ChevronDownIcon />
+                        </span>
+                      </>
+                    )}
                   </Button>
                 </Box>
               </Flex>
@@ -218,7 +274,7 @@ function Create() {
                   marginLeft="12px"
                 >
                   <Text>
-                    Expires on
+                    Expiry date
                   </Text>
                 </Box>
               </Flex>
@@ -231,8 +287,9 @@ function Create() {
                 >
                   <input
                     type="datetime-local"
-                    id="meeting-time"
-                    name="meeting-time"
+                    value={deliveryDate}
+                    onChange={(e) => setDeliveryDate(e.target.value)}
+                    min={new Date().toISOString().substring(0, 16)}
                     style={{
                       width: '100%',
                       borderRadius: '99999999px',
@@ -248,8 +305,9 @@ function Create() {
                 >
                   <input
                     type="datetime-local"
-                    id="meeting-time"
-                    name="meeting-time"
+                    value={expiryDate}
+                    onChange={(e) => setExpiryDate(e.target.value)}
+                    min={new Date().toISOString().substring(0, 16)}
                     style={{
                       width: '100%',
                       borderRadius: '99999999px',
@@ -343,6 +401,19 @@ function Create() {
                 backgroundColor="custom.brand"
                 fontSize="20px"
                 paddingY="28px"
+                disabled={
+                  tokenIn === undefined || tokenOut === undefined || amountIn === '' || amountOut === '' || deliveryDate === '' || expiryDate === ''
+                }
+                onClick={() => {
+                  console.log(tokenIn);
+                  console.log(tokenOut);
+
+                  console.log(amountIn);
+                  console.log(amountOut);
+
+                  console.log(deliveryDate);
+                  console.log(expiryDate);
+                }}
               >
                 Create proposal
               </Button>

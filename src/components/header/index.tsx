@@ -10,10 +10,17 @@ import {
 import {
   Link as RouterLink,
 } from 'react-router-dom';
+import {
+  useWeb3React,
+} from '@web3-react/core';
 
 import WalletConnector from '../walletConnector';
 
 function Header() {
+  const {
+    account,
+  } = useWeb3React();
+
   return (
     <Flex
       p={4}
@@ -51,7 +58,7 @@ function Header() {
             textDecoration: 'none',
           }}
         >
-          Create
+          Create Future Swap
         </Link>
         <Link
           as={RouterLink}
@@ -67,13 +74,49 @@ function Header() {
             textDecoration: 'none',
           }}
         >
-          Proposals
+          Browse Future Swap Proposals
         </Link>
       </HStack>
       <Spacer />
-      <Center>
+      <HStack spacing="24px">
+        {account && (
+          <>
+            <Link
+              as={RouterLink}
+              to="/proposals"
+              fontWeight="500"
+              color="#cccccc"
+              _activeLink={{
+                color: '#f5f5f5',
+                fontWeight: 600,
+              }}
+              _hover={{
+                color: '#f5f5f5',
+                textDecoration: 'none',
+              }}
+            >
+              My Future Swap Proposals
+            </Link>
+            <Link
+              as={RouterLink}
+              to="/proposals"
+              fontWeight="500"
+              color="#cccccc"
+              _activeLink={{
+                color: '#f5f5f5',
+                fontWeight: 600,
+              }}
+              _hover={{
+                color: '#f5f5f5',
+                textDecoration: 'none',
+              }}
+            >
+              My Future Swaps
+            </Link>
+          </>
+        )}
         <WalletConnector />
-      </Center>
+      </HStack>
     </Flex>
   );
 }

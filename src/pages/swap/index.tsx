@@ -167,14 +167,18 @@ function Home() {
                 marginBottom="8px"
                 color="#999"
               >
-                <Box width={1 / 2}>
+                <Box
+                  width={1 / 2}
+                  marginRight="12px"
+                >
                   <Text>
                     Delivery date
                   </Text>
                 </Box>
                 <Box
                   width={1 / 2}
-                  textAlign="right"
+                  paddingX="14px"
+                  marginLeft="12px"
                 >
                   <Text>
                     Expires on
@@ -184,9 +188,30 @@ function Home() {
               <Flex
                 width="100%"
               >
-                <Box width={1 / 2}>
+                <Box
+                  width={1 / 2}
+                  marginRight="12px"
+                >
                   <input
-                    width="100%"
+                    type="datetime-local"
+                    id="meeting-time"
+                    name="meeting-time"
+                    min="2018-06-07T00:00"
+                    max="2018-06-14T00:00"
+                    style={{
+                      width: '100%',
+                      borderRadius: '99999999px',
+                      padding: '14px',
+                      backgroundColor: '#333',
+                      color: '#f5f5f5',
+                    }}
+                  />
+                </Box>
+                <Box
+                  width={1 / 2}
+                  marginLeft="12px"
+                >
+                  <input
                     type="datetime-local"
                     id="meeting-time"
                     name="meeting-time"
@@ -194,22 +219,12 @@ function Home() {
                     min="2018-06-07T00:00"
                     max="2018-06-14T00:00"
                     style={{
-                      borderRadius: '20px',
-                      padding: '10px',
+                      width: '100%',
+                      borderRadius: '99999999px',
+                      padding: '14px',
                       backgroundColor: '#333',
                       color: '#f5f5f5',
                     }}
-                  />
-                </Box>
-                <Box width={1 / 2}>
-                  <input
-                    width="100%"
-                    type="datetime-local"
-                    id="meeting-time"
-                    name="meeting-time"
-                    value="2018-06-12T19:30"
-                    min="2018-06-07T00:00"
-                    max="2018-06-14T00:00"
                   />
                 </Box>
               </Flex>
@@ -259,7 +274,7 @@ function Home() {
                     fontSize="14px"
                     fontWeight="500"
                   >
-                    0.012 ETH per UNI
+                    0.012 UNI per ETH
                   </Text>
                 </Box>
               </Flex>
@@ -272,7 +287,7 @@ function Home() {
                     fontSize="16px"
                     fontWeight="600"
                   >
-                    Expected change
+                    Difference
                   </Text>
                 </Box>
                 <Box
@@ -294,6 +309,8 @@ function Home() {
                 isFullWidth
                 borderRadius="full"
                 backgroundColor="custom.brand"
+                fontSize="20px"
+                paddingY="28px"
               >
                 Create proposal
               </Button>

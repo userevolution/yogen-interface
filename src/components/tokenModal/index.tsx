@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+  useState,
+} from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -21,7 +23,6 @@ interface TokenModalProps {
   isOpen: boolean;
   onClose: Function;
   title: string;
-  description: string;
   address: string;
   onAddressChange: Function;
   symbol: string;
@@ -66,7 +67,6 @@ function TokenModal(props: TokenModalProps) {
     isOpen,
     onClose,
     title,
-    description,
     address,
     onAddressChange,
     symbol,
@@ -98,13 +98,18 @@ function TokenModal(props: TokenModalProps) {
             bg="#333333"
             border="none"
             size="lg"
+            borderRadius="full"
           />
           <Divider marginY={5} />
-          <VStack spacing="20px">
+          <VStack spacing="20px" marginBottom="10px">
             {tokens.map((token) => (
               <HStack
                 width="100%"
-                justifyContent="space-around"
+                justifyContent="space-between"
+                onClick={() => alert(token.name)}
+                _hover={{
+                  backgroundColor: '#333',
+                }}
               >
                 <HStack>
                   <Image
@@ -140,15 +145,6 @@ function TokenModal(props: TokenModalProps) {
             ))}
           </VStack>
         </ModalBody>
-        <ModalFooter>
-          <Button
-            isFullWidth
-            bg="#00CC7E"
-            onClick={() => onClose()}
-          >
-            Save
-          </Button>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   );

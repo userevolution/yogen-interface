@@ -89,7 +89,6 @@ function Add() {
         isOpen={isTokenInModalOpen}
         onClose={() => toggleTokenInModal(false)}
         title="Select a token"
-        description="The token to swap"
         address={tokenInAddress}
         onAddressChange={(address: string) => setTokenInAddress(address)}
         symbol="ETH"

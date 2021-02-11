@@ -18,9 +18,41 @@ import {
   ChevronDownIcon,
 } from '@chakra-ui/icons';
 
-function Home() {
+import TokenModal from '../../components/tokenModal';
+
+function Create() {
+  const [tokenIn, setTokenIn] = useState<string>('');
+  const [amountIn, setAmountIn] = useState<string>('');
+  const [balanceIn, setBalanceIn] = useState<string>('-');
+
+  const [tokenOut, setTokenOut] = useState<string>('');
+  const [amountOut, setAmountOut] = useState<string>('');
+  const [balanceOut, setBalanceOut] = useState<string>('-');
+
+  const [deliveryDate, setDeliveryDate] = useState<string>('');
+  const [expiryDate, setExpiryDate] = useState<string>('');
+
+  const [isTokenInModalOpen, toggleTokenInModal] = useState<boolean>(false);
+  const [isTokenOutModalOpen, toggleTokenOutModal] = useState<boolean>(false);
+
   return (
     <>
+      <TokenModal
+        isOpen={isTokenInModalOpen}
+        onClose={() => toggleTokenInModal(false)}
+        title="Select a token"
+        symbol=""
+        address={tokenIn}
+        onAddressChange={(token: string) => setTokenIn(token)}
+      />
+      <TokenModal
+        isOpen={isTokenOutModalOpen}
+        onClose={() => toggleTokenOutModal(false)}
+        title="Select a token"
+        symbol=""
+        address={tokenOut}
+        onAddressChange={(token: string) => setTokenOut(token)}
+      />
       <Center>
         <Box
           backgroundColor="#141414"
@@ -34,7 +66,7 @@ function Home() {
             fontWeight="700"
             marginBottom="18px"
           >
-            Create a proposal
+            Create Proposal
           </Heading>
           <VStack spacing="16px">
             <Box width="100%">
@@ -54,7 +86,9 @@ function Home() {
                   textAlign="right"
                 >
                   <Text>
-                    Balance: 0
+                    Balance:
+                    {}
+                    {balanceIn}
                   </Text>
                 </Box>
               </Flex>
@@ -87,6 +121,7 @@ function Home() {
                     borderRadius="full"
                     backgroundColor="custom.brand"
                     alignItems="center"
+                    onClick={() => toggleTokenInModal(true)}
                   >
                     <span>
                       Select token
@@ -122,7 +157,9 @@ function Home() {
                   textAlign="right"
                 >
                   <Text>
-                    Balance: 0
+                    Balance:
+                    {}
+                    {balanceIn}
                   </Text>
                 </Box>
               </Flex>
@@ -196,8 +233,6 @@ function Home() {
                     type="datetime-local"
                     id="meeting-time"
                     name="meeting-time"
-                    min="2018-06-07T00:00"
-                    max="2018-06-14T00:00"
                     style={{
                       width: '100%',
                       borderRadius: '99999999px',
@@ -215,9 +250,6 @@ function Home() {
                     type="datetime-local"
                     id="meeting-time"
                     name="meeting-time"
-                    value="2018-06-12T19:30"
-                    min="2018-06-07T00:00"
-                    max="2018-06-14T00:00"
                     style={{
                       width: '100%',
                       borderRadius: '99999999px',
@@ -322,4 +354,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Create;

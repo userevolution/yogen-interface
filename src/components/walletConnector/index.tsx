@@ -44,7 +44,6 @@ function WalletConnector() {
           rounded="full"
           bg="custom.primary"
           color="custom.secondary"
-          marginRight="10px"
         >
           Rinkeby
         </Button>
@@ -89,7 +88,7 @@ function WalletConnector() {
                 onClick={async () => {
                   try {
                     await activate(injected);
-                    // onClose();
+                    onClose();
                   } catch (e) {
                     console.error(e);
                   }
@@ -113,7 +112,7 @@ function WalletConnector() {
                 onClick={async () => {
                   try {
                     await activate(walletConnect);
-                    // onClose();
+                    onClose();
                   } catch (e) {
                     console.error(e);
                   }
@@ -137,7 +136,7 @@ function WalletConnector() {
                 onClick={async () => {
                   try {
                     await activate(portis);
-                    // onClose();
+                    onClose();
                   } catch (e) {
                     console.error(e);
                   }

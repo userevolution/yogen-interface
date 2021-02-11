@@ -14,7 +14,7 @@ import {
 import Header from '../header';
 
 import Home from '../../pages/home';
-import Swap from '../../pages/swap';
+import Create from '../../pages/create';
 import Test from '../../pages/test';
 
 import theme from '../../style/theme';
@@ -28,8 +28,7 @@ function App() {
           <Header />
           <Switch>
             <Route path="/" exact component={Home} />
-            <Route path="/create" exact component={Swap} />
-            <Route path="/swap" exact component={Swap} />
+            <Route path="/create" exact component={Create} />
             <Route path="/test" exact component={Test} />
             <Route path="/" component={Home} />
           </Switch>

@@ -30,24 +30,28 @@ const tokens: Token[] = [
     name: 'Synthetix Network Token',
     symbol: 'SNX',
     icon: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png',
+    decimals: 18,
   },
   {
     address: '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f',
     name: 'Synthetix Network Token',
     symbol: 'SNX',
     icon: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png',
+    decimals: 18,
   },
   {
     address: '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f',
     name: 'Synthetix Network Token',
     symbol: 'SNX',
     icon: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png',
+    decimals: 18,
   },
   {
     address: '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f',
     name: 'Synthetix Network Token',
     symbol: 'SNX',
     icon: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png',
+    decimals: 18,
   },
 ];
 

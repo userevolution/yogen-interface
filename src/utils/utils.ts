@@ -1,94 +1,32 @@
 import {
   providers,
-  utils,
 } from 'ethers';
-import axios from 'axios';
 
-async function signChallenge(provider: providers.Web3Provider): Promise<{
-  challenge: string;
-  sig: string;
-}> {
-  try {
-    const challenge = Date.now().toString();
-    const sig = await provider.getSigner().signMessage(challenge);
-
-    return {
-      challenge,
-      sig,
-    };
-  } catch (e) {
-    throw new Error('Cannot sign challenge');
-  }
-}
-
-function verifyChallenge(
-  challenge: string,
-  investor: string,
-  sig: string,
-): Boolean {
-  return utils.verifyMessage(challenge, sig) === investor;
-}
-
-async function getTrades(
-  address: string,
-  challenge: string,
-  sig: string,
-) {
-  try {
-    const res = await axios({
-      method: 'get',
-      url: '',
-      params: {
-        address,
-        challenge,
-        sig,
-      },
-    });
-
-    return res.data;
-  } catch (e) {
-    throw new Error('Cannot get trades');
-  }
-}
-
-async function signSwap(
+async function signProposal(
   provider: providers.Web3Provider,
-  amountIn: string,
   tokenIn: string,
-  amountOut: string,
+  amountIn: string,
   tokenOut: string,
-  triggerPrice: string,
-  maxCost: string,
-  nonce: string,
+  amountOut: string,
+  deliveryDate: string,
+  expiryDate: string,
+  chainId: string,
 ): Promise<string> {
   try {
-    console.log(
-      amountIn,
-      tokenIn,
-      amountOut,
-      tokenOut,
-      maxCost,
-      nonce,
-    );
-
     // eslint-disable-next-line no-underscore-dangle
     const sig = await provider.getSigner()._signTypedData({
-      name: 'Nucter',
+      name: 'Yogen',
       version: '1',
-      verifyingContract: process.env.REACT_APP_NUCTER_ADDRESS,
-      chainId: 4,
+      verifyingContract: '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f',
+      chainId,
     }, {
       Swap: [
-        {
-          name: 'amountIn',
-          type: 'uint256',
-        },
         {
           name: 'tokenIn',
           type: 'address',
         },
         {
-          name: 'amountOut',
+          name: 'amountIn',
           type: 'uint256',
         },
         {
@@ -96,38 +34,34 @@ async function signSwap(
           type: 'address',
         },
         {
-          name: 'triggerPrice',
+          name: 'amountOut',
           type: 'uint256',
         },
         {
-          name: 'maxCost',
+          name: 'deliveryDate',
           type: 'uint256',
         },
         {
-          name: 'nonce',
+          name: 'expiryDate',
           type: 'uint256',
         },
       ],
     }, {
-      amountIn,
       tokenIn,
-      amountOut,
+      amountIn,
       tokenOut,
-      triggerPrice,
-      maxCost,
-      nonce,
+      amountOut,
+      deliveryDate,
+      expiryDate,
     });
 
     return sig;
   } catch (e) {
     console.error(e);
-    throw new Error('Cannot sign swap');
+    throw new Error('Cannot sign proposal');
   }
 }
 
 export {
-  signChallenge,
-  getTrades,
-  verifyChallenge,
-  signSwap,
+  signProposal,
 };

@@ -21,7 +21,10 @@ import {
 import {
   useWeb3React,
 } from '@web3-react/core';
-import { utils } from 'ethers';
+import {
+  BigNumber,
+  utils,
+} from 'ethers';
 
 import TokenModal from '../../components/tokenModal';
 
@@ -31,11 +34,15 @@ import {
 import {
   fetchPriceOn1Inch,
 } from '../../utils/priceFetcher';
+import {
+  saveProposal,
+} from '../../utils/textile';
 
 function Create() {
   const {
     account,
     library,
+    chainId,
   } = useWeb3React();
 
   const [tokenIn, setTokenIn] = useState<Token>();
@@ -53,7 +60,8 @@ function Create() {
   const [isTokenOutModalOpen, toggleTokenOutModal] = useState<boolean>(false);
 
   const [askedPrice, setAskedPrice] = useState<string>('-');
-
+  const [marketPrice, setMarketPrice] = useState<string>('-');
+  const [expectedChange, setExpectedChange] = useState<string>('-');
 
   useEffect(() => {
     if (tokenIn && tokenOut && amountIn !== '' && amountOut !== '') {
@@ -75,6 +83,7 @@ function Create() {
         );
 
         console.log(price);
+        setMarketPrice(price);
       } catch (e) {
         console.error(e);
       }
@@ -389,7 +398,7 @@ function Create() {
                     fontSize="14px"
                     fontWeight="500"
                   >
-                    {tokenIn && tokenOut ? (
+                    {askedPrice !== '-' ? (
                       <>
                         {`${askedPrice} ${tokenOut?.symbol} per ${tokenIn?.symbol}`}
                       </>
@@ -417,9 +426,15 @@ function Create() {
                 >
                   <Text
                     fontSize="14px"
-                    fontWeight="500"
+                    color="#999"
                   >
-                    0.011534 ETH per UNI
+                    {marketPrice !== '-' ? (
+                      <>
+                        {`${marketPrice} ${tokenOut?.symbol} per ${tokenIn?.symbol}`}
+                      </>
+                    ) : (
+                      <>-</>
+                    )}
                   </Text>
                 </Box>
               </Flex>
@@ -429,8 +444,8 @@ function Create() {
               >
                 <Box width={1 / 2}>
                   <Text
-                    fontSize="16px"
-                    fontWeight="600"
+                    fontSize="14px"
+                    color="#999"
                   >
                     Expected changed
                   </Text>
@@ -440,11 +455,19 @@ function Create() {
                   textAlign="right"
                 >
                   <Text
-                    fontSize="16px"
+                    fontSize="14px"
+                    color="#999"
                     fontWeight="600"
-                    color="custom.brand"
                   >
-                    +36%
+                    {marketPrice !== '-' && askedPrice !== '-' ? (
+                      <>
+                        {`${BigNumber.from(askedPrice).sub(BigNumber.from(marketPrice)).div(BigNumber.from(marketPrice)).toString()}%`}
+                      </>
+                    ) : (
+                      <>
+                        -
+                      </>
+                    )}
                   </Text>
                 </Box>
               </Flex>
@@ -473,6 +496,19 @@ function Create() {
                     );
 
                     console.log(sig);
+
+                    await saveProposal({
+                      _id: Math.random().toString(),
+                      initiator: account as string,
+                      tokenIn: tokenIn?.address as string,
+                      amountIn: utils.parseUnits(amountIn, tokenIn?.decimals).toString(),
+                      tokenOut: tokenOut?.address as string,
+                      amountOut: utils.parseUnits(amountOut, tokenOut?.decimals).toString(),
+                      deliveryDate,
+                      expiryDate,
+                      sig,
+                      networkId: chainId?.toString(10) as string,
+                    });
                   } catch (e) {
                     console.error(e);
                   }

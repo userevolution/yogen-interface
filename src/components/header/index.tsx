@@ -78,7 +78,7 @@ function Header() {
         </Link>
         <Link
           as={RouterLink}
-          to="/proposals"
+          to="/futureswaps"
           fontWeight="500"
           color="#cccccc"
           _activeLink={{
@@ -90,7 +90,7 @@ function Header() {
             textDecoration: 'none',
           }}
         >
-          Trade Futures
+          Future Swaps
         </Link>
       </HStack>
       <Spacer />

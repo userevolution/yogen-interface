@@ -17,6 +17,7 @@ import Home from '../../pages/home';
 import Create from '../../pages/create';
 import Test from '../../pages/test';
 import Proposals from '../../pages/proposals';
+import FutureSwaps from '../../pages/futureSwaps';
 
 import theme from '../../style/theme';
 import getLibrary from '../../store/library';
@@ -32,6 +33,7 @@ function App() {
             <Route path="/create" exact component={Create} />
             <Route path="/test" exact component={Test} />
             <Route path="/proposals" exact component={Proposals} />
+            <Route path="/futureswaps" exact component={FutureSwaps} />
             <Route path="/" component={Home} />
           </Switch>
         </BrowserRouter>

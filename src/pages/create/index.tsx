@@ -69,6 +69,8 @@ function Create() {
   const [marketPrice, setMarketPrice] = useState<string>('-');
   const [expectedChange, setExpectedChange] = useState<string>('-');
 
+  const [buttonText, setButtonText] = useState<string>('Create a proposal');
+
   useEffect(() => {
     if (tokenIn && tokenOut && amountIn !== '' && amountOut !== '') {
       const newAskedPrice = FixedNumber.from(amountOut).divUnsafe(FixedNumber.from(amountIn));
@@ -470,7 +472,9 @@ function Create() {
                     fontSize="14px"
                     color="#999"
                   >
-                    Current price on Uniswap
+                    Current price on
+                    {' '}
+                    {chainId === 1 ? '1inch' : 'Uniswap'}
                   </Text>
                 </Box>
                 <Box
@@ -537,6 +541,8 @@ function Create() {
                 }
                 onClick={async () => {
                   try {
+                    setButtonText('Waiting for signature...');
+
                     const sig = await signProposal(
                       library,
                       tokenIn?.address as string,
@@ -545,10 +551,12 @@ function Create() {
                       utils.parseUnits(amountOut, tokenOut?.decimals as number).toString(),
                       (new Date(deliveryDate).getTime() / 1000).toString(),
                       (new Date(expiryDate).getTime() / 1000).toString(),
-                      '4',
+                      chainId?.toString(10) as string,
                     );
 
                     console.log(sig);
+
+                    setButtonText('Saving proposal...');
 
                     await saveProposal({
                       _id: Math.random().toString(),
@@ -562,6 +570,8 @@ function Create() {
                       sig,
                       networkId: chainId?.toString(10) as string,
                     });
+
+                    setButtonText('Prposal created!');
                   } catch (e) {
                     console.error(e);
                   }
@@ -569,7 +579,7 @@ function Create() {
               >
                 {account ? (
                   <>
-                    Create Proposal
+                    {buttonText}
                   </>
                 ) : (
                   <>

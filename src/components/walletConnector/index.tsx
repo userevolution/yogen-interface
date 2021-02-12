@@ -25,6 +25,19 @@ import MetaMaskIcon from '../../assets/img/metaMask.png';
 import WalletConnectIcon from '../../assets/img/walletConnect.svg';
 import PortisIcon from '../../assets/img/portis.png';
 
+function returnNetwork(chainId: number) {
+  switch (chainId) {
+    case 1:
+      return 'Mainnet';
+    case 4:
+      return 'Rinkeby';
+    case 79377087078960:
+      return 'Arbitrum';
+    default:
+      return 'Wrong network';
+  }
+}
+
 function WalletConnector() {
   const {
     activate,
@@ -46,11 +59,7 @@ function WalletConnector() {
           bg="custom.primary"
           color="custom.secondary"
         >
-          {chainId === 4 ? (
-            <>Rinkeby</>
-          ) : (
-            <>Arbitrum</>
-          )}
+          {returnNetwork(chainId as number)}
         </Button>
       )}
       <Button

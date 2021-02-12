@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {
-  utils,
   FixedNumber,
   providers,
   BigNumber,
@@ -26,8 +25,6 @@ async function fetchPriceOn1Inch(
       },
     });
 
-    console.log(res.data);
-
     const fromAmount = res.data.fromTokenAmount as string;
     const fromToken = res.data.fromToken as Token;
     const toToken = res.data.toToken as Token;
@@ -47,7 +44,7 @@ async function fetchPriceOnDex(
   tokenIn: string,
   amountIn: BigNumber,
   tokenOut: string,
-): Promise<string> {
+): Promise<BigNumber> {
   try {
     const routerAddress = chainId === 79377087078960 ? '0x054ef3Fb14894f106401D707a3f4debb7D082887' : '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
     const router = UniswapV2Router02__factory.connect(routerAddress, provider);
@@ -59,7 +56,7 @@ async function fetchPriceOnDex(
       ],
     );
 
-    return amountsOut[1].toString();
+    return amountsOut[1];
   } catch (e) {
     console.error(e);
     throw new Error('Cannot fetch price on dex');

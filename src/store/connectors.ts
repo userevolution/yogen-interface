@@ -3,7 +3,7 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { PortisConnector } from '@web3-react/portis-connector';
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [4],
+  supportedChainIds: [4, 79377087078960],
 });
 
 export const walletConnect = new WalletConnectConnector({

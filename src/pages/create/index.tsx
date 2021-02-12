@@ -22,8 +22,8 @@ import {
   useWeb3React,
 } from '@web3-react/core';
 import {
-  BigNumber,
   utils,
+  FixedNumber,
 } from 'ethers';
 
 import TokenModal from '../../components/tokenModal';
@@ -33,10 +33,16 @@ import {
 } from '../../utils/utils';
 import {
   fetchPriceOn1Inch,
+  fetchPriceOnDex,
 } from '../../utils/priceFetcher';
 import {
   saveProposal,
 } from '../../utils/textile';
+import {
+  getBalance,
+} from '../../utils/erc20';
+
+import QuestionIcon from '../../assets/img/question.png';
 
 function Create() {
   const {
@@ -65,25 +71,33 @@ function Create() {
 
   useEffect(() => {
     if (tokenIn && tokenOut && amountIn !== '' && amountOut !== '') {
-      const price = utils.parseUnits(amountOut, tokenOut?.decimals).div(
-        utils.parseUnits(amountIn, tokenIn?.decimals),
-      );
-
-      setAskedPrice(price.toString());
+      const newAskedPrice = FixedNumber.from(amountOut).divUnsafe(FixedNumber.from(amountIn));
+      setAskedPrice(newAskedPrice.toString());
     }
   }, [tokenIn, tokenOut, amountIn, amountOut]);
 
   useEffect(() => {
     async function fetchPrice() {
       try {
-        const price = await fetchPriceOn1Inch(
-          tokenIn?.address as string,
-          utils.parseUnits(amountIn, tokenIn?.decimals).toString(),
-          tokenOut?.address as string,
-        );
+        if (chainId === 1) {
+          const price = await fetchPriceOn1Inch(
+            tokenIn?.address as string,
+            utils.parseUnits(amountIn, tokenIn?.decimals).toString(),
+            tokenOut?.address as string,
+          );
 
-        console.log(price);
-        setMarketPrice(price);
+          setMarketPrice(price);
+        } else {
+          const price = await fetchPriceOnDex(
+            library,
+            chainId as number,
+            tokenIn?.address as string,
+            utils.parseUnits(amountIn, tokenIn?.decimals),
+            tokenOut?.address as string,
+          );
+
+          setMarketPrice(utils.formatUnits(price, tokenOut?.decimals));
+        }
       } catch (e) {
         console.error(e);
       }
@@ -93,6 +107,38 @@ function Create() {
       fetchPrice();
     }
   }, [tokenIn, tokenOut, amountIn]);
+
+  useEffect(() => {
+    if (askedPrice !== '-' && marketPrice !== '-') {
+      setExpectedChange(
+        FixedNumber.from(askedPrice)
+          .subUnsafe(FixedNumber.from(marketPrice))
+          .divUnsafe(FixedNumber.from(marketPrice))
+          .mulUnsafe(FixedNumber.from(100))
+          .toString(),
+      );
+    }
+  }, [askedPrice, marketPrice]);
+
+  useEffect(() => {
+    async function fetchBalances() {
+      try {
+        if (tokenIn && account) {
+          const balance = await getBalance(library, tokenIn.address, account as string);
+          setBalanceIn(balance);
+        }
+
+        if (tokenOut && account) {
+          const balance = await getBalance(library, tokenOut.address, account as string);
+          setBalanceOut(balance);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    fetchBalances();
+  }, [tokenIn, tokenOut]);
 
   return (
     <>
@@ -125,10 +171,15 @@ function Create() {
             color="#f5f5f5"
             fontSize="22px"
             fontWeight="700"
-            marginBottom="18px"
           >
             Create Proposal
           </Heading>
+          <Text
+            color="#666"
+            marginBottom="18px"
+          >
+            Create a future swap proposal that can be filled in by anyone.
+          </Text>
           <VStack spacing="16px">
             <Box width="100%">
               <Flex
@@ -192,6 +243,7 @@ function Create() {
                           src={tokenIn.logoURI}
                           borderRadius="full"
                           boxSize="24px"
+                          fallbackSrc={QuestionIcon}
                         />
                         <Text
                           color="custom.primary"
@@ -284,6 +336,7 @@ function Create() {
                           src={tokenOut.logoURI}
                           borderRadius="full"
                           boxSize="24px"
+                          fallbackSrc={QuestionIcon}
                         />
                         <Text
                           color="custom.primary"
@@ -400,7 +453,7 @@ function Create() {
                   >
                     {askedPrice !== '-' ? (
                       <>
-                        {`${askedPrice} ${tokenOut?.symbol} per ${tokenIn?.symbol}`}
+                        {`${askedPrice.split('.')[0]}.${askedPrice.split('.')[1] && askedPrice.split('.')[1].substring(0, 6)} ${tokenOut?.symbol} per ${tokenIn?.symbol}`}
                       </>
                     ) : (
                       <>-</>
@@ -430,7 +483,7 @@ function Create() {
                   >
                     {marketPrice !== '-' ? (
                       <>
-                        {`${marketPrice} ${tokenOut?.symbol} per ${tokenIn?.symbol}`}
+                        {`${marketPrice.split('.')[0]}.${marketPrice.split('.')[1] && marketPrice.split('.')[1].substring(0, 6)} ${tokenOut?.symbol} per ${tokenIn?.symbol}`}
                       </>
                     ) : (
                       <>-</>
@@ -461,7 +514,7 @@ function Create() {
                   >
                     {marketPrice !== '-' && askedPrice !== '-' ? (
                       <>
-                        {`${BigNumber.from(askedPrice).sub(BigNumber.from(marketPrice)).div(BigNumber.from(marketPrice)).toString()}%`}
+                        {`${expectedChange.split('.')[0]}.${expectedChange.split('.')[1] && expectedChange.split('.')[1].substring(0, 4)}%`}
                       </>
                     ) : (
                       <>
@@ -504,8 +557,8 @@ function Create() {
                       amountIn: utils.parseUnits(amountIn, tokenIn?.decimals).toString(),
                       tokenOut: tokenOut?.address as string,
                       amountOut: utils.parseUnits(amountOut, tokenOut?.decimals).toString(),
-                      deliveryDate,
-                      expiryDate,
+                      deliveryDate: (new Date(deliveryDate).getTime() / 1000).toString(),
+                      expiryDate: (new Date(expiryDate).getTime() / 1000).toString(),
                       sig,
                       networkId: chainId?.toString(10) as string,
                     });

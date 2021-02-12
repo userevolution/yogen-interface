@@ -29,6 +29,7 @@ function WalletConnector() {
   const {
     activate,
     account,
+    chainId,
   } = useWeb3React();
 
   const {
@@ -45,7 +46,11 @@ function WalletConnector() {
           bg="custom.primary"
           color="custom.secondary"
         >
-          Rinkeby
+          {chainId === 4 ? (
+            <>Rinkeby</>
+          ) : (
+            <>Arbitrum</>
+          )}
         </Button>
       )}
       <Button

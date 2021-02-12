@@ -16,8 +16,12 @@ import {
   Box,
   Image,
 } from '@chakra-ui/react';
+import {
+  useWeb3React,
+} from '@web3-react/core';
 
-import Uniswap from '../../assets/tokenLists/uniswap.json';
+import CustomTokenList from '../../assets/tokenLists/custom.json';
+import QuestionIcon from '../../assets/img/question.png';
 
 interface TokenModalProps {
   isOpen: boolean;
@@ -33,6 +37,10 @@ function TokenModal(props: TokenModalProps) {
     title,
     onTokenSelected,
   } = props;
+
+  const {
+    chainId,
+  } = useWeb3React();
 
   const [searchAddress, setSearchAddress] = useState<string>('');
 
@@ -66,7 +74,7 @@ function TokenModal(props: TokenModalProps) {
           />
           <Divider marginY={5} />
           <VStack spacing="20px" marginBottom="10px">
-            {Uniswap.tokens.map((token) => (
+            {CustomTokenList.tokens.filter((token) => token.chainId === chainId).map((token) => (
               <HStack
                 key={(Math.random().toString())}
                 width="100%"
@@ -81,6 +89,7 @@ function TokenModal(props: TokenModalProps) {
                     src={token.logoURI}
                     borderRadius="full"
                     boxSize="24px"
+                    fallbackSrc={QuestionIcon}
                   />
                   <Text
                     color="custom.primary"
